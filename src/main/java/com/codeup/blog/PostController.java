@@ -4,10 +4,7 @@ package com.codeup.blog;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +13,12 @@ import java.util.List;
 public class PostController {
 
     private final PostRepository postDao;
+    private final UserRepository userDao;
 
-    public PostController(PostRepository postDao) {
+    public PostController(PostRepository postDao, UserRepository userDao) {
         this.postDao = postDao;
+        this.userDao = userDao;
+
     }
 
     @GetMapping("/posts")
@@ -46,24 +46,55 @@ public class PostController {
     }
 
 
-    @PostMapping("posts/update/{id}")
-        public String updatePost(@PathVariable long id){
-            Post post = postDao.findOne(id);
-            post.setBody("test");
-            postDao.save(post);
-            return "posts/index";
-        }
 
+    @PostMapping("/posts/{id}/edit")
+    public String editpost(@RequestParam String title, @RequestParam String body, @PathVariable Long id){
+        Post post = postDao.findOne(id);
+        post.setBody(body);
+        post.setTitle(title);
+        postDao.save(post);
+        return "redirect:/posts";
+
+    }
 
     @GetMapping("/posts/create")
-    @ResponseBody
-    public String form(){
-        return "Here is a form to add a post";
+    public String form(Model model){
+        model.addAttribute("post", new Post());
+        return "posts/form";
     }
 
     @PostMapping("/posts/create")
-    @ResponseBody
-    public String addPost(){
-        return "Post has been created";
+    public String addPost(@ModelAttribute Post post){
+       User user = userDao.findOne(1L);
+       post.setUser(user);
+       postDao.save(post);
+       return "redirect:/posts";
     }
+
+    @GetMapping("/posts/{id}/edit")
+    public String editPostForm(@PathVariable long id, Model model){
+        Post post = postDao.findOne(id);
+        model.addAttribute("post", post);
+        return "posts/editpost";
+    }
+
+//    public static void main(String[] args) {
+//        String example = "I love watching movies";
+//
+//        String[] copyHere = new String[5];
+//        copyHere = example.split(" ");
+//
+//        String test = "";
+//
+//        for(int i = copyHere.length -1; i >=0; i--){
+//            if(i > 0){
+//                test += copyHere[i] + " ";
+//            } else if(i == 0)
+//            test += copyHere[i];
+//        }
+//
+//        System.out.println(test );
+//
+//
+//    }
 }

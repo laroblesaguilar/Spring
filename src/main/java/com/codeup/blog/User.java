@@ -1,23 +1,42 @@
 package com.codeup.blog;
 
+
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
+@Table(name = "users")
 public class User {
 
-    private String id;
+    @Id
+    @GeneratedValue
+    private long id;
+
+    @Column(nullable = false)
     private String username;
+
+    @Column(nullable = false)
     private String password;
 
-    public User(String id, String username, String password) {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Post> posts;
+
+
+    public User(long id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
     }
 
-    public String getId() {
-        return id;
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public User(){}
+
+    public long getId() {
+        return id;
     }
 
     public String getUsername() {
@@ -35,4 +54,5 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
 }

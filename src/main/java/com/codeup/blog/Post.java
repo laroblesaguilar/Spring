@@ -16,9 +16,15 @@ public class Post {
     private String body;
 
 
-//    @OneToOne
-//    private User owner;
+   @ManyToOne
+   @JoinColumn(name = "user_id")
+   private User user;
 
+    public Post(String title, String body, User user) {
+        this.title = title;
+        this.body = body;
+        this.user = user;
+    }
 
     public String getTitle() {
         return title;
@@ -55,4 +61,15 @@ public class Post {
         this.body = body;
     }
 
+
+
+    public Post(){}
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
