@@ -5,10 +5,12 @@
     <title>Title</title>
 </head>
 <body>
-<form th:action="@{'/posts/'+ ${post.id} + '/edit'}" method="post">
 
-<input type="text" th:value="${post.title}" name="title"/>
-<input type="text" th:value="${post.body}" name="body"/>
+
+<form th:action="@{'/posts/'+ ${post.id} + '/edit'}" th:object="${post}" th:method="post">
+
+<input type="text" th:field="*{title}"/>
+<input type="text" th:field="*{body}" />
 <button>Submit</button>
 
 </form>

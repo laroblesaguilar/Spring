@@ -14,10 +14,12 @@ public class PostController {
 
     private final PostRepository postDao;
     private final UserRepository userDao;
+    private EmailService emailService;
 
-    public PostController(PostRepository postDao, UserRepository userDao) {
+    public PostController(PostRepository postDao, UserRepository userDao, EmailService emailService) {
         this.postDao = postDao;
         this.userDao = userDao;
+        this.emailService = emailService;
 
     }
 
@@ -48,11 +50,9 @@ public class PostController {
 
 
     @PostMapping("/posts/{id}/edit")
-    public String editpost(@RequestParam String title, @RequestParam String body, @PathVariable Long id){
-        Post post = postDao.findOne(id);
-        post.setBody(body);
-        post.setTitle(title);
-        postDao.save(post);
+    public String editpost(@ModelAttribute Post editedPost){
+        editedPost.setUser(userDao.findOne(1l));
+        postDao.save(editedPost);
         return "redirect:/posts";
 
     }
@@ -67,7 +67,8 @@ public class PostController {
     public String addPost(@ModelAttribute Post post){
        User user = userDao.findOne(1L);
        post.setUser(user);
-       postDao.save(post);
+       Post savedPost = postDao.save(post);
+       emailService.prepareAndSend(savedPost, "test", "test");
        return "redirect:/posts";
     }
 
