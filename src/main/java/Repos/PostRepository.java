@@ -1,5 +1,6 @@
-package com.codeup.blog;
+package Repos;
 
+import com.codeup.blog.Models.Post;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.codeup.blog;
+package com.codeup.blog.Models;
 
 
 import javax.persistence.*;
@@ -30,6 +30,13 @@ public class User {
         this.username = username;
         this.password = password;
         this.email = email;
+    }
+
+    public User(User copy) {
+        id = copy.id; // This line is SUPER important! Many things won't work if it's absent
+        email = copy.email;
+        username = copy.username;
+        password = copy.password;
     }
 
     public String getEmail() {
